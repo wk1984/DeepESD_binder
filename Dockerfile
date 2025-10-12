@@ -10,7 +10,8 @@ WORKDIR /workspace
 
 # 更新conda并安装所有依赖包
 RUN conda update -n base -c defaults conda && \
-    conda install -c conda-forge -y \
+    conda install -c conda-forge -y mamba && \
+    mamba install -c conda-forge -y \
     # R 基础环境
     'r-base>=3.6.1,<4' \
     # R 包依赖
