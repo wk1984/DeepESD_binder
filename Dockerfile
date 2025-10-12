@@ -57,6 +57,7 @@ RUN mamba install -c conda-forge -y \
     'r-value=2.2.2' \
     'r-loader.java=1.1.1' \
     'r-tensorflow=2.6.0' \
+	'r-keras=2.6.0' \
     'r-irkernel=1.2' \
     'r-magrittr=2.0.1' \
     'r-rcolorbrewer=1.1_2' \
@@ -73,8 +74,8 @@ RUN mamba install -c conda-forge -y \
     conda clean -afy
 
 # 安装额外的R包和配置
-RUN R -e "install.packages(c('devtools', 'keras'), repos='https://cloud.r-project.org/')" && \
-    R -e "keras::install_keras()" && \
+RUN R -e "install.packages(c('devtools'), repos='https://cloud.r-project.org/')" && \
+#    R -e "keras::install_keras()" && \
     R -e "IRkernel::installspec(user = FALSE)"
  
 # RUN python -c "import dl4ds as dds; import climetlab as cml"
