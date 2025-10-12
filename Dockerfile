@@ -1,5 +1,5 @@
 # 使用官方 Miniconda 镜像作为基础
-FROM continuumio/miniconda3:latest
+FROM continuumio/miniconda3:4.12.0
 
 # 设置环境变量
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
