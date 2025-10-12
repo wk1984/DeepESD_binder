@@ -41,7 +41,7 @@ RUN . /root/.bashrc \
 # 
 RUN python -m pip install pip==20.2 # -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 
-RUN pip install tensorflow==2.6.0 keras==2.6.0 jupyter==1.0.0 jupyterhub==1.4.2 notebook==6.4.2 jupyterlab==3.1.4 jupyter_nbextensions_configurator==0.4.1 nbgitpuller==0.10.1
+RUN pip install --use-feature=2020-resolver tensorflow==2.6.0 keras==2.6.0 jupyter==1.0.0 jupyterhub==1.4.2 notebook==6.4.2 jupyterlab==3.1.4 jupyter_nbextensions_configurator==0.4.1 nbgitpuller==0.10.1
 
 # 更新conda并安装所有依赖包
 RUN mamba install -c conda-forge -y "r-base>=3.6.1,<4" "r-loader==1.7.1" "r-loader.2nc==0.1.1" "r-transformer==2.1.0" "r-downscaler==3.3.2" "r-visualizer==1.6.0" "r-downscaler.keras==1.0.0" "r-climate4r.value==0.0.2" "r-climate4r.udg==0.2.4" "r-value==2.2.2" "r-loader.java==1.1.1" "r-tensorflow==2.6.0" "r-irkernel==1.2" "r-magrittr==2.0.1" "r-rcolorbrewer==1.1_2" "r-gridextra==2.3" "r-ggplot2==3.3.3" && \
