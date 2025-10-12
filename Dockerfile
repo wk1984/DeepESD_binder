@@ -57,16 +57,13 @@ RUN mamba install -c conda-forge -y \
     'r-value=2.2.2' \
     'r-loader.java=1.1.1' \
     'r-tensorflow=2.6.0' \
-	'r-keras=2.6.0' \
     'r-irkernel=1.2' \
     'r-magrittr=2.0.1' \
     'r-rcolorbrewer=1.1_2' \
     'r-gridextra=2.3' \
     'r-ggplot2=3.3.3' \
-    # 工具和其他依赖
-    'cdo=1.9.10' \
     # Python 依赖
-    'tensorflow=2.6.*' \
+    'tensorflow=2.6.0' \
     'python=3.9.*' \
     # Jupyter Lab
     'jupyterlab' \
