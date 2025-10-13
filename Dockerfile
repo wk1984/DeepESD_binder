@@ -7,6 +7,9 @@ FROM wk1984/climate4r
 # 设置工作目录
 WORKDIR /workspace
 
+RUN source /opt/conda/bin/activate c4r-tf && \
+    R --vanilla -e 'IRkernel::installspec(name = "c4r-tf", displayname = "climate4R (deep)")'
+
 # 设置容器启动时执行的默认命令。
 # 启动一个 bash 终端，此时 Conda 环境 'c4r-tf' 已被自动激活。
 CMD [ "bash" ]
