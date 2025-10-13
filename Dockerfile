@@ -45,11 +45,13 @@ RUN apt-get update && \
 # 注意：此文件需要在构建镜像时位于 Dockerfile 的同级目录下
 COPY c4r-tf.yml /tmp/c4r-tf.yml
 
+RUN conda install mamba -c conda-forge
+
 # 使用配置文件创建新的 Conda 环境
 # 这一步可能会花费较长时间，具体取决于 yml 文件中指定的软件包数量
-RUN conda env create -f /tmp/c4r-tf.yml && \
+RUN mamba env create -f /tmp/c4r-tf.yml && \
     # 创建完成后，清理所有不必要的包和缓存，大幅减小镜像体积
-    conda clean -afy
+    mamba clean -afy
 
 # ==================================================================
 # 5. 配置默认环境和启动命令
