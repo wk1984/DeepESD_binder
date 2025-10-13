@@ -6,11 +6,11 @@ FROM jupyter/base-notebook:python-3.9.13
 
 RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
 
-SHELL ["conda", "init", "/bin/bash"]
+CMD ["conda", "init", "/bin/bash"]
     
 # SHELL ["/bin/bash", "conda", "activate", "test"]
 # 
-# RUN which jupyter-lab
+RUN which jupyter-lab
 # 
 # # RUN source /opt/conda/bin/activate c4r-tf && \
 # #     mamba install -y -c conda-forge notebook==7.3 jupyterlab==4.3 referencing==0.35 jupyter==1.1 jupyter-server==2.15 \
