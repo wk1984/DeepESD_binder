@@ -4,10 +4,10 @@
 # 使用官方的 NVIDIA CUDA 11.2.2 镜像，包含 cuDNN 8 和开发工具
 FROM jupyter/base-notebook:python-3.9.13
 
+RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
+
 # 设置工作目录
 WORKDIR /workspace
-
-RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
 
 SHELL ["conda", "init", "/bin/bash"]
     
