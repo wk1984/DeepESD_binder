@@ -1,4 +1,4 @@
-FROM tensorflow/2.6.1-gpu-jupyter
+FROM tensorflow/tensorflow:2.6.1-gpu-jupyter
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
