@@ -8,8 +8,11 @@ FROM jupyter/base-notebook:python-3.9.13
 WORKDIR /workspace
 
 RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge && \
-    conda activate test && \
-    which jupyter-lab
+    conda activate test
+    
+SHELL ["conda", "run", "-n", "test", "/bin/bash", "-c"]
+
+RUN which jupyter-lab
 
 # RUN source /opt/conda/bin/activate c4r-tf && \
 #     mamba install -y -c conda-forge notebook==7.3 jupyterlab==4.3 referencing==0.35 jupyter==1.1 jupyter-server==2.15 \
