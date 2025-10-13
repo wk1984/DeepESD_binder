@@ -4,17 +4,21 @@
 # 使用官方的 NVIDIA CUDA 11.2.2 镜像，包含 cuDNN 8 和开发工具
 FROM jupyter/base-notebook:python-3.9.13
 
-RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
+ARG env=test
+
+ENV PATH /opt/conda/envs/{env}/bin:$PATH
+
+RUN mamba create -n {env} python==3.9.13 jupyterlab -c conda-forge
 
 RUN conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate test" >> ~/.bashrc
+    echo "conda activate {env}" >> ~/.bashrc
     
 RUN mamba install xarray -c conda-forge
 
 # CMD ["conda", "init", "/bin/bash"]
     
-# SHELL ["/bin/bash", "conda", "activate", "test"]
+# SHELL ["/bin/bash", "conda", "activate", "{env}"]
 # 
 RUN which jupyter-lab
 # 
