@@ -29,6 +29,6 @@ RUN echo "Testing Jupyter Lab installation..." && \
     jupyter-lab --version && \
     echo "Jupyter Lab test successful."
 
-#EXPOSE 8888
+EXPOSE 8888
 
 CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser"]
