@@ -18,7 +18,7 @@
 #RUN mamba install -y -c conda-forge -c r -c santandermetgroup jupyter referencing==0.36.2 
 #RUN mamba install -y -c conda-forge -c r -c santandermetgroup jupyter typing-extensions==4.14.1 typing_extensions==4.14.1
 
-FROM wk1984/climate4t
+FROM wk1984/climate4r
 
 RUN which jupyter-lab
 
