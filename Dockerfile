@@ -11,7 +11,7 @@ RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
 
 SHELL ["conda", "init", "/bin/bash"]
     
-SHELL ["conda", "activate", "test"]
+SHELL ["/bin/bash", "conda", "activate", "test"]
 
 RUN which jupyter-lab
 
