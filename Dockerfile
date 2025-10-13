@@ -31,4 +31,4 @@ RUN echo "Testing Jupyter Lab installation..." && \
 
 EXPOSE 8888
 
-CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser"]
+CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser", "--allow-root"]
