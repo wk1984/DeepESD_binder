@@ -23,8 +23,6 @@ FROM wk1984/climate4r
 USER root
 RUN pip install zenodo-get
 
-USER root
-RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
 RUN usermod -aG sudo user
 
 # 必须要修改权限，否则JUPYTER停止后不能够重新启动
