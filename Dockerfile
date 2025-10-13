@@ -14,13 +14,15 @@ RUN conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate ${ENV0}" >> ~/.bashrc
     
-RUN mamba install xarray -c conda-forge
+RUN mamba install xarray -c conda-forge -n ${ENV0}
 
 # CMD ["conda", "init", "/bin/bash"]
     
 # SHELL ["/bin/bash", "conda", "activate", "${ENV0}"]
 # 
 RUN which jupyter-lab
+
+EXPOSE 8888
 # 
 # # RUN source /opt/conda/bin/activate c4r-tf && \
 # #     mamba install -y -c conda-forge notebook==7.3 jupyterlab==4.3 referencing==0.35 jupyter==1.1 jupyter-server==2.15 \
@@ -30,4 +32,5 @@ RUN which jupyter-lab
 # WORKDIR /workspace
 # # 设置容器启动时执行的默认命令。
 # # 启动一个 bash 终端，此时 Conda 环境 'c4r-tf' 已被自动激活。
+
 CMD [ "jupyter-lab" ]
