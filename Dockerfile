@@ -20,7 +20,7 @@
 
 FROM wk1984/climate4r
 
-RUN cat /etc/passwd
+RUN useradd -m -s /bin/bash jovyan && echo "jovyan:111" | chpasswd
 
 RUN usermod -aG sudo jovyan
 
