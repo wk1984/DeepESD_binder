@@ -6,7 +6,11 @@ FROM jupyter/base-notebook:python-3.9.13
 
 RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
 
-CMD ["conda", "init", "/bin/bash"]
+RUN conda init bash && \
+    echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate test" >> ~/.bashrc
+
+# CMD ["conda", "init", "/bin/bash"]
     
 # SHELL ["/bin/bash", "conda", "activate", "test"]
 # 
