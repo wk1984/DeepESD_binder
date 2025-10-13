@@ -18,4 +18,4 @@ COPY c4r-tf.yml c4r-tf.yml
 RUN mamba env create -n climate4tf --file c4r-tf.yml && \
     source /opt/conda/bin/activate climate4tf && \
     mamba install -y -c conda-forge -c r -c santandermetgroup jupyter --user && \
-    R --vanilla -e 'IRkernel::installspec(name = "climate4tf", displayname = "climate4R (deep)", user = FALSE)'
+    R --vanilla -e 'IRkernel::installspec(name = "climate4tf", displayname = "climate4R (deep)", user = TRUE)'
