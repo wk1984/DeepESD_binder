@@ -20,6 +20,10 @@
 
 FROM wk1984/climate4r
 
+RUN usermod -aG sudo jovyan
+
+USER jovyan
+
 RUN which jupyter-lab
 
 # ---- 新增的测试步骤 ----
@@ -31,4 +35,4 @@ RUN echo "Testing Jupyter Lab installation..." && \
 
 EXPOSE 8888
 
-CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser", "--allow-root"]
+CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser"]
