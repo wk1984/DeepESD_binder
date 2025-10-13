@@ -21,7 +21,6 @@
 FROM wk1984/climate4r
 
 RUN useradd -m -s /bin/bash jovyan && echo "jovyan:111" | chpasswd
-
 RUN usermod -aG sudo jovyan
 
 USER jovyan
@@ -35,6 +34,18 @@ RUN echo "Testing Jupyter Lab installation..." && \
     jupyter-lab --version && \
     echo "Jupyter Lab test successful."
 
+# 必须要修改权限，否则JUPYTER停止后不能够重新启动
+USER root
+RUN mkdir /workdir
+RUN chown -R jovyan:user /workdir
+RUN chmod -R u+rwx /workdir
+
+RUN mkdir /home/jovyan/.jupyter
+RUN chown -R jovyan:user /home/jovyan/.jupyter
+RUN chmod -R u+rwx /home/jovyan/.jupyter
+
 EXPOSE 8888
+
+WORKDIR /workdir
 
 CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser"]
