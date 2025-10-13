@@ -12,7 +12,7 @@ RUN conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate ${ENV0}" >> ~/.bashrc
 	
-RUN mamba install -y -c conda-forge -c r -c santandermetgroup jupyter
+RUN mamba install -y -c conda-forge -c r -c santandermetgroup jupyter ipykernel==6.30.*
     
 RUN which jupyter-lab
 
