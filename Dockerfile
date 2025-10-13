@@ -7,6 +7,9 @@ FROM jupyter/base-notebook:python-3.9.13
 # 设置工作目录
 WORKDIR /workspace
 
+RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge && \
+    source /opt/conda/bin/activate test
+
 # RUN source /opt/conda/bin/activate c4r-tf && \
 #     mamba install -y -c conda-forge notebook==7.3 jupyterlab==4.3 referencing==0.35 jupyter==1.1 jupyter-server==2.15 typing-extensions==3.7.4 bokeh==3.4 && \
 #     R --vanilla -e 'IRkernel::installspec(name = "c4r-tf", displayname = "climate4R (deep)")'
