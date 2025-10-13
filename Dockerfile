@@ -16,7 +16,7 @@ RUN conda install mamba -y -n base -c conda-forge
 # climate4R + tensorflow for deep learning
 COPY c4r-tf.yml c4r-tf.yml
 
-RUN conda env update --file c4r-tf.yml --prune && \
+RUN conda env update --name base --file c4r-tf.yml --prune && \
     mamba install -y -c conda-forge -c r -c santandermetgroup jupyter && \
     R --vanilla -e 'IRkernel::installspec(name = "base", displayname = "climate4R (deep)", user = TRUE)'
 
