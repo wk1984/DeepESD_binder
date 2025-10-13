@@ -7,8 +7,9 @@ FROM jupyter/base-notebook:python-3.9.13
 # 设置工作目录
 WORKDIR /workspace
 
-RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge && \
-    conda activate test
+RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
+
+SHELL ["conda", "init", "/bin/bash"]
     
 SHELL ["conda", "run", "-n", "test", "/bin/bash", "-c"]
 
