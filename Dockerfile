@@ -20,4 +20,4 @@ RUN which jupyter-lab
 # WORKDIR /workspace
 # # 设置容器启动时执行的默认命令。
 # # 启动一个 bash 终端，此时 Conda 环境 'c4r-tf' 已被自动激活。
-# CMD [ "jupyter-lab" ]
+CMD [ "jupyter-lab" ]
