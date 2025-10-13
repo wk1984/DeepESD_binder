@@ -20,20 +20,20 @@
 
 FROM wk1984/climate4r
 
-RUN useradd -m -s /bin/bash jovyan && echo "jovyan:111" | chpasswd
-RUN usermod -aG sudo jovyan
+RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
+RUN usermod -aG sudo user
 
 # 必须要修改权限，否则JUPYTER停止后不能够重新启动
 USER root
 RUN mkdir /workdir
-RUN chown -R jovyan:user /workdir
+RUN chown -R user:user /workdir
 RUN chmod -R u+rwx /workdir
 
-RUN mkdir /home/jovyan/.jupyter
-RUN chown -R jovyan:user /home/jovyan/.jupyter
-RUN chmod -R u+rwx /home/jovyan/.jupyter
+RUN mkdir /home/user/.jupyter
+RUN chown -R user:user /home/user/.jupyter
+RUN chmod -R u+rwx /home/user/.jupyter
 
-USER jovyan
+USER user
 
 EXPOSE 8888
 
