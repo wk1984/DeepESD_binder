@@ -20,6 +20,8 @@
 
 FROM wk1984/climate4r
 
+RUN cat /etc/passwd
+
 RUN usermod -aG sudo jovyan
 
 USER jovyan
