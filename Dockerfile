@@ -10,7 +10,7 @@ RUN conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate test" >> ~/.bashrc
     
-RUN conda install xarray -c conda-forge
+RUN mamba install xarray -c conda-forge
 
 # CMD ["conda", "init", "/bin/bash"]
     
