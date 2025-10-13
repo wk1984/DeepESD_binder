@@ -9,6 +9,8 @@ RUN mamba create -n test python==3.9.13 jupyterlab -c conda-forge
 RUN conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate test" >> ~/.bashrc
+    
+RUN conda install xarray -c conda-forge
 
 # CMD ["conda", "init", "/bin/bash"]
     
