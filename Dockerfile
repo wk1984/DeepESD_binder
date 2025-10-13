@@ -8,7 +8,7 @@ FROM wk1984/climate4r
 WORKDIR /workspace
 
 RUN source /opt/conda/bin/activate c4r-tf && \
-    mamba install -y -c conda-forge notebook==6.5.6 jupyterlab jupyter_contrib_nbextensions jupyter_nbextensions_configurator jupyter && \
+    mamba install -y -c conda-forge notebook==7.3.2 jupyterlab==4.3.4 jupyter-server==2.15.0 referencing==0.35.1 jupyter==1.1.1 jupyter-server==2.15.0 typing-extensions==3.7.4.3 bokeh==3.4.3 && \
     R --vanilla -e 'IRkernel::installspec(name = "c4r-tf", displayname = "climate4R (deep)")'
 
 # 设置容器启动时执行的默认命令。
