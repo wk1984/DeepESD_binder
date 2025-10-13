@@ -11,6 +11,8 @@ ENV PATH=/opt/conda/envs/${ENV0}/bin:$PATH
 RUN conda init bash && \
     echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate ${ENV0}" >> ~/.bashrc
+	
+RUN mamba install -y -c conda-forge -c r -c santandermetgroup jupyter
     
 RUN which jupyter-lab
 
