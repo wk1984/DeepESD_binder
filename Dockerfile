@@ -23,17 +23,6 @@ FROM wk1984/climate4r
 RUN useradd -m -s /bin/bash jovyan && echo "jovyan:111" | chpasswd
 RUN usermod -aG sudo jovyan
 
-USER jovyan
-
-RUN which jupyter-lab
-
-# ---- 新增的测试步骤 ----
-# 在构建时测试 jupyter-lab 是否可以正常调用。
-# --version 会打印版本号并成功退出(返回码0)。如果 jupyter-lab 安装失败，构建会在此处停止。
-RUN echo "Testing Jupyter Lab installation..." && \
-    jupyter-lab --version && \
-    echo "Jupyter Lab test successful."
-
 # 必须要修改权限，否则JUPYTER停止后不能够重新启动
 USER root
 RUN mkdir /workdir
@@ -44,8 +33,19 @@ RUN mkdir /home/jovyan/.jupyter
 RUN chown -R jovyan:user /home/jovyan/.jupyter
 RUN chmod -R u+rwx /home/jovyan/.jupyter
 
+USER jovyan
+
 EXPOSE 8888
 
 WORKDIR /workdir
+
+RUN which jupyter-lab
+
+# ---- 新增的测试步骤 ----
+# 在构建时测试 jupyter-lab 是否可以正常调用。
+# --version 会打印版本号并成功退出(返回码0)。如果 jupyter-lab 安装失败，构建会在此处停止。
+RUN echo "Testing Jupyter Lab installation..." && \
+    jupyter-lab --version && \
+    echo "Jupyter Lab test successful."
 
 CMD ["jupyter-lab",  "--ip=0.0.0.0"  , "--no-browser"]
