@@ -23,18 +23,6 @@ FROM wk1984/climate4r
 USER root
 RUN pip install zenodo-get
 
-RUN usermod -aG sudo user
-
-# 必须要修改权限，否则JUPYTER停止后不能够重新启动
-USER root
-RUN mkdir /workdir
-RUN chown -R user:user /workdir
-RUN chmod -R u+rwx /workdir
-
-RUN mkdir /home/user/.jupyter
-RUN chown -R user:user /home/user/.jupyter
-RUN chmod -R u+rwx /home/user/.jupyter
-
 USER user
 
 EXPOSE 8888
