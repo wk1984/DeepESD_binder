@@ -1,59 +1,21 @@
-FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
-# FROM ubuntu:20.04
+FROM jupyter/base-notebook:python-3.9.13
 
-RUN export DEBIAN_FRONTEND=noninteractive \
-    export DEBCONF_NONINTERACTIVE_SEEN=true \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends wget make m4 patch build-essential ca-certificates cmake curl nano git \
-                                                  ffmpeg libsm6 libxext6 \
-                                                  libgeos-dev libproj-dev \
-												  libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
-												  llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
-#     && apt-get install -y --no-install-recommends libgeos-dev libproj-dev libgl1-mesa-glx \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
-# RUN python3 -V
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_4.9.2-Linux-x86_64.sh -O ~/miniforge.sh \
-# RUN wget --quiet https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py38_23.9.0-0-Linux-x86_64.sh -O ~/miniforge.sh \
-#RUN wget --quiet https://gh-proxy.com/https://github.com/conda-forge/miniforge/releases/download/4.12.0-0/Mambaforge-4.12.0-0-Linux-x86_64.sh -O ~/miniforge.sh \
-    && /bin/bash ~/miniforge.sh -b -p /opt/miniforge \
-    && rm ~/miniforge.sh \
-    && ln -s /opt/miniforge/etc/profile.d/conda.sh /etc/profile.d/conda.sh \
-    && echo ". /opt/miniforge/etc/profile.d/conda.sh" >> ~/.bashrc
+USER root
+RUN apt-get update && apt-get install -y xorg git wget build-essential tzdata && apt-get clean
 
-ENV PATH=/opt/miniforge/bin:${PATH}
-ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+#RUN useradd -m -s /bin/bash jovyan && echo "jovyan:111" | chpasswd
+RUN usermod -aG sudo jovyan
 
-# RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
-# RUN usermod -aG sudo user
-# USER user
+USER jovyan
+RUN conda install mamba -y -n base -c conda-forge
 
-# 配置PYTHON环境
-
-RUN . /root/.bashrc \
-     && /opt/miniforge/bin/conda init bash \
-#     && conda info --envs \
-#     && conda update -n base -c defaults conda \
-# #    && conda config --set custom_channels.conda-forge https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/ \
-     && conda install -c conda-forge mamba -y
-# 
-RUN python -m pip install pip==20.2 # -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
-
-RUN pip install --use-feature=2020-resolver tensorflow==2.6.0 keras==2.6.0 jupyter==1.0.0 jupyterhub==1.4.2 notebook==6.4.2 jupyterlab==3.1.4 jupyter_nbextensions_configurator==0.4.1 nbgitpuller==0.10.1
-
-# 更新conda并安装所有依赖包
-RUN mamba install -c conda-forge -y "r-base>=3.6.1,<4" "r-loader==1.7.1" "r-loader.2nc==0.1.1" "r-transformer==2.1.0" "r-downscaler==3.3.2" "r-visualizer==1.6.0" "r-downscaler.keras==1.0.0" "r-climate4r.value==0.0.2" "r-climate4r.udg==0.2.4" "r-value==2.2.2" "r-loader.java==1.1.1" "r-tensorflow==2.6.0" "r-irkernel==1.2" "r-magrittr==2.0.1" "r-rcolorbrewer==1.1_2" "r-gridextra==2.3" "r-ggplot2==3.3.3" && \
-    conda clean -afy
-
-# 安装额外的R包和配置
-RUN R -e "install.packages(c('devtools'), repos='https://cloud.r-project.org/')" && \
-#    R -e "keras::install_keras()" && \
-    R -e "IRkernel::installspec(user = FALSE)"
- 
-# RUN python -c "import dl4ds as dds; import climetlab as cml"
-# notebook==7.3.2 jupyter==1.1.1 jupyterlab==4.3.4 jupyter-server==2.15.0 referencing==0.35.1 typing-extensions==3.7.4.3 python-json-logger==2.0.7
-
-# pip install tensorflow==2.6.0 keras==2.6.0 jupyter==1.0.0 jupyterhub==1.4.2 notebook==6.4.2 jupyterlab==3.1.4 jupyter_nbextensions_configurator==0.4.1 nbgitpuller==0.10.1 -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple 
-# mamba install -c conda-forge -y "r-base>=3.6.1,<4" "r-loader==1.7.1" "r-loader.2nc==0.1.1" "r-transformer==2.1.0" "r-downscaler==3.3.2" "r-visualizer==1.6.0" "r-downscaler.keras==1.0.0" "r-climate4r.value==0.0.2" "r-climate4r.udg==0.2.4" "r-value==2.2.2" "r-loader.java==1.1.1" "r-tensorflow==2.6.0" "r-irkernel==1.2" "r-magrittr==2.0.1" "r-rcolorbrewer==1.1_2" "r-gridextra==2.3" "r-ggplot2==3.3.3"
+# climate4R + tensorflow for deep learning
+COPY c4r-tf.yml c4r-tf.yml
+RUN mamba env create -n climate4tf --file c4r-tf.yml && \
+    source /opt/conda/bin/activate climate4tf && \
+    mamba install -y -c conda-forge -c r -c santandermetgroup jupyter && \
+    R --vanilla -e 'IRkernel::installspec(name = "climate4tf", displayname = "climate4R (deep)", user = FALSE)'
