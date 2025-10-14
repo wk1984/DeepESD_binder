@@ -29,6 +29,10 @@ EXPOSE 8888
 
 WORKDIR /workdir
 
+RUN mkdir -p /workdir/data/pr && \
+    zenodo_get -r 17331040 -o ./data -g x_ERA-Interim.rds.gz && \
+    zenodo_get -r 17331040 -o ./data/pr -g y.rds.gz    
+
 RUN which jupyter-lab
 
 # ---- 新增的测试步骤 ----
