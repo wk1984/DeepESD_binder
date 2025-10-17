@@ -27,7 +27,7 @@ ENV PATH="$VENV_PATH/bin:$PATH"
 
 # Grant the default rstudio user permissions to use the virtual environment
 
-RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd && \
+RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
 
 RUN chown -R rstudio:rstudio $VENV_PATH
 
