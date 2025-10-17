@@ -11,11 +11,7 @@ RUN mamba install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc
 
 RUN which jupyter-lab
 
-#USER user
 
-EXPOSE 8888
-
-WORKDIR /workdir
 
 # ---- 新增的测试步骤 ----
 # 在构建时测试 jupyter-lab 是否可以正常调用。
@@ -23,3 +19,19 @@ WORKDIR /workdir
 RUN echo "Testing Jupyter Lab installation..." && \
     jupyter-lab --version && \
     echo "Jupyter Lab test successful."
+	
+	
+# 必须要修改权限，否则JUPYTER停止后不能够重新启动
+RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd && \
+    usermod -aG sudo user && \
+    mkdir /workspace && \
+    chown -R user:user /workspace && \
+    chmod -R u+rwx /workspace   && \
+    chown -R user:user /home/user/   && \
+    chmod -R u+rwx /home/user/
+	
+USER user
+
+EXPOSE 8888
+
+WORKDIR /workdir
