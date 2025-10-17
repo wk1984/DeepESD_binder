@@ -2,7 +2,7 @@
 # 1. 基础镜像
 # ==================================================================
 
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:4.12.0
 
 RUN conda install -c conda-forge jupyterlab tensorflow==2.6.0 keras==2.6.0
 
