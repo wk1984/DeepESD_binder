@@ -4,7 +4,7 @@
 
 # 1. Base Image
 # Using a specific version of rocker/r-ver for reproducibility.
-FROM rocker/r-ver:4.3.1
+FROM rocker/r-ver:4.1.3-cuda11.1
 
 # ==============================================================================
 # 2. System Dependencies
@@ -26,6 +26,9 @@ RUN python3 -m venv $VENV_PATH
 ENV PATH="$VENV_PATH/bin:$PATH"
 
 # Grant the default rstudio user permissions to use the virtual environment
+
+RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd && \
+
 RUN chown -R rstudio:rstudio $VENV_PATH
 
 # ==============================================================================
