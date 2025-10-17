@@ -1,43 +1,66 @@
-# ==================================================================
-# 1. 基础镜像
-# ==================================================================
+# ==============================================================================
+# Dockerfile to install compatible versions of R, Python, TensorFlow, and Keras
+# ==============================================================================
 
-#FROM continuumio/miniconda3:4.12.0
-FROM condaforge/mambaforge:24.9.2-0
+# 1. Base Image
+# Using a specific version of rocker/r-ver for reproducibility.
+FROM rocker/r-ver:4.3.1
 
-RUN mamba install -c conda-forge jupyterlab tensorflow keras -y
+# ==============================================================================
+# 2. System Dependencies
+# Install Python, pip, and create a virtual environment.
+# ==============================================================================
+# Switch to root to install system packages
+USER root
 
-RUN mamba install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java r-tensorflow r-irkernel r-ncdf4 -y
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-venv \
+    python3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install zenodo-get -y
+# Create a virtual environment for Python packages to avoid system conflicts
+ENV VENV_PATH=/opt/venv
+RUN python3 -m venv $VENV_PATH
+ENV PATH="$VENV_PATH/bin:$PATH"
 
-RUN which jupyter-lab
+# Grant the default rstudio user permissions to use the virtual environment
+RUN chown -R rstudio:rstudio $VENV_PATH
 
+# ==============================================================================
+# 3. Python Packages Installation
+# Install specific versions of TensorFlow.
+# Keras is now integrated into TensorFlow (tf.keras).
+# ==============================================================================
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+    tensorflow==2.13.0
 
+# ==============================================================================
+# 4. R Packages Installation
+# Switch back to the default non-root user 'rstudio'
+# ==============================================================================
+USER rstudio
 
-# ---- 新增的测试步骤 ----
-# 在构建时测试 jupyter-lab 是否可以正常调用。
-# --version 会打印版本号并成功退出(返回码0)。如果 jupyter-lab 安装失败，构建会在此处停止。
-RUN echo "Testing Jupyter Lab installation..." && \
-    jupyter-lab --version && \
-    echo "Jupyter Lab test successful."
-	
-	
-# 必须要修改权限，否则JUPYTER停止后不能够重新启动
-RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd && \
-    usermod -aG sudo user && \
-    mkdir /workspace && \
-    chown -R user:user /workspace && \
-    chmod -R u+rwx /workspace   && \
-    chown -R user:user /home/user/   && \
-    chmod -R u+rwx /home/user/
-	
-USER user
+# Set the RETICULATE_PYTHON environment variable.
+# This is crucial for the R 'reticulate' package to find the correct Python installation.
+ENV RETICULATE_PYTHON=$VENV_PATH/bin/python
 
-EXPOSE 8888
+# Install the R packages from CRAN
+RUN R -e "install.packages(c('reticulate', 'tensorflow', 'keras'), repos = 'https://cloud.r-project.org/')"
 
-WORKDIR /workdir
+# ==============================================================================
+# 5. Verification
+# Run some R commands to ensure that TensorFlow and Keras are correctly configured.
+# ==============================================================================
+RUN R -e "library(tensorflow); cat('Python configuration used by R:\\n'); reticulate::py_config()"
+RUN R -e "library(tensorflow); cat('\\nTensorFlow version detected by R:\\n'); print(tf_config())"
+RUN R -e "library(keras); cat('\\nIs Keras available to R?:', is_keras_available(), '\\n')"
+RUN R -e "library(tensorflow); cat('\\nPython TensorFlow module version:', tf$`__version__`, '\\n')"
 
-RUN mkdir -p /workdir/data/pr && \
-    zenodo_get -r 17331040 -o /workdir/data/ -g x_ERA-Interim.rds.gz && \
-    zenodo_get -r 17331040 -o /workdir/data/pr -g y.rds.gz 
+# ==============================================================================
+# 6. Set Default Command (Optional)
+# ==============================================================================
+WORKDIR /home/rstudio
+CMD ["/bin/bash"]
