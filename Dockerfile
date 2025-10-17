@@ -9,6 +9,8 @@ RUN mamba install -c conda-forge jupyterlab tensorflow keras
 
 RUN mamba install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java r-tensorflow r-irkernel r-ncdf4
 
+RUN pip install zenodo-get
+
 RUN which jupyter-lab
 
 
@@ -35,3 +37,7 @@ USER user
 EXPOSE 8888
 
 WORKDIR /workdir
+
+RUN mkdir -p /workdir/data/pr && \
+    zenodo_get -r 17331040 -o /workdir/data/ -g x_ERA-Interim.rds.gz && \
+    zenodo_get -r 17331040 -o /workdir/data/pr -g y.rds.gz 
