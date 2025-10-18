@@ -28,7 +28,8 @@ ENV PATH="$VENV_PATH/bin:$PATH"
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
     tensorflow==2.13.0 \
-    jupyterlab
+    jupyterlab \
+    "typing-extensions>=4.7.0"
 
 # --- THIS IS THE KEY CHANGE ---
 # Install R packages system-wide as root
