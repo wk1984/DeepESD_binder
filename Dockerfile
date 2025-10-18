@@ -46,6 +46,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
     
 RUN chown -R rstudio:rstudio $CONDA_DIR
+
+RUN conda install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java
     
 RUN pip install jupyterlab
     
