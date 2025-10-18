@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 #ARG MINICONDA_URL="https://github.com/conda-forge/miniforge/releases/download/25.3.1-0/Miniforge3-25.3.1-0-Linux-x86_64.sh"
-ARG MINICONDA_URL="https://github.com/conda-forge/miniforge/releases/download/4.14.0-2/Mambaforge-4.14.0-2-Linux-x86_64.sh"
+#ARG MINICONDA_URL="https://github.com/conda-forge/miniforge/releases/download/4.14.0-2/Mambaforge-4.14.0-2-Linux-x86_64.sh"
+ARG MINICONDA_URL="https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_25.7.0-2-Linux-x86_64.sh"
 ENV CONDA_DIR=/opt/conda
 # 将 Conda 的可执行文件路径添加到系统 PATH 中
 ENV PATH=${CONDA_DIR}/bin:${PATH}
@@ -48,7 +49,7 @@ RUN apt-get update && \
     
 RUN chown -R rstudio:rstudio $CONDA_DIR
 
-RUN conda install -c conda-forge tensorflow==2.15.* keras==2.15.*
+RUN conda install -c conda-forge tensorflow==2.6.* keras==2.6.*
 
 RUN conda install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java
     
