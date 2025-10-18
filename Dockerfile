@@ -10,6 +10,9 @@ FROM rocker/r-ver:4.5
 # ===================================================================================
 USER root
 
+# Grant the rstudio user permissions for the venv AFTER all installations
+RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
+
 # Install system libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev git \
@@ -42,6 +45,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
     
+RUN chown -R rstudio:rstudio $CONDA_DIR
+    
 RUN pip install jupyterlab
     
 # --- THIS IS THE KEY CHANGE ---
@@ -50,10 +55,6 @@ RUN R -e "install.packages(c('reticulate', 'tensorflow', 'keras', 'IRkernel'), r
 
 # Register the R kernel with Jupyter system-wide
 RUN R -e "IRkernel::installspec(user = FALSE)"
-
-# Grant the rstudio user permissions for the venv AFTER all installations
-RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
-RUN chown -R rstudio:rstudio $CONDA_DIR
 
 # ===================================================================================
 # 5. Final User Configuration and Runtime Command
