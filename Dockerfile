@@ -12,23 +12,37 @@ USER root
 
 # Install system libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-pip \
-    python3-venv \
-    python3-dev \
-    libpng-dev \
+    libpng-dev git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Create and configure Python virtual environment
-ENV VENV_PATH=/opt/venv
-RUN python3 -m venv $VENV_PATH
-ENV PATH="$VENV_PATH/bin:$PATH"
+ARG MINICONDA_URL="https://github.com/conda-forge/miniforge/releases/download/25.3.1-0/Miniforge3-25.3.1-0-Linux-x86_64.sh"
+ENV CONDA_DIR=/opt/conda
+# 将 Conda 的可执行文件路径添加到系统 PATH 中
+ENV PATH=${CONDA_DIR}/bin:${PATH}
 
-# Install Python packages
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    tensorflow==2.16.* \
-    jupyterlab
+# ==================================================================
+# 3. 安装系统依赖并下载安装 Miniconda
+# ==================================================================
+RUN apt-get update && \
+    # 安装构建和下载所需的软件包
+    apt-get install -y --no-install-recommends \
+        wget \
+        ca-certificates \
+        bzip2 && \
+    # 下载指定的 Miniconda 安装脚本
+    wget --quiet ${MINICONDA_URL} -O ~/miniconda.sh && \
+    # 以批处理模式(-b)将 Miniconda 安装到指定路径(-p)
+    /bin/bash ~/miniconda.sh -b -p ${CONDA_DIR} && \
+    # 删除安装脚本
+    rm ~/miniconda.sh && \
+    # 初始化 Conda，使其能够在 shell 中使用
+    conda init bash && \
+    # 清理 apt 缓存，减小镜像体积
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+    
+RUN pip install jupyterlab
     
 # --- THIS IS THE KEY CHANGE ---
 # Install R packages system-wide as root
@@ -39,7 +53,7 @@ RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # Grant the rstudio user permissions for the venv AFTER all installations
 RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
-RUN chown -R rstudio:rstudio $VENV_PATH
+RUN chown -R rstudio:rstudio $CONDA_DIR
 
 # ===================================================================================
 # 5. Final User Configuration and Runtime Command
@@ -49,7 +63,7 @@ USER rstudio
 WORKDIR /home/rstudio
 
 # Set the RETICULATE_PYTHON environment variable for the user
-ENV RETICULATE_PYTHON=$VENV_PATH/bin/python
+ENV RETICULATE_PYTHON=$CONDA_DIR/bin/python
 
 # Expose the port (can be done as root, but placement here is fine)
 EXPOSE 8888
