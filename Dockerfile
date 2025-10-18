@@ -57,7 +57,7 @@ RUN conda install -c conda-forge tensorflow==2.15.0 keras==2.15.0
 
 RUN conda install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java r-tensorflow==2.15.0 r-keras==2.15.0
     
-RUN pip install jupyterlab
+RUN pip install jupyterlab zenodo-get
     
 # --- THIS IS THE KEY CHANGE ---
 # Install R packages system-wide as root
@@ -72,6 +72,10 @@ RUN R -e "IRkernel::installspec(user = FALSE)"
 # Now, switch to the non-root user for the runtime environment
 USER rstudio
 WORKDIR /home/rstudio
+
+RUN mkdir -p /workdir/data/pr && \
+    zenodo_get -r 17331040 -o /workdir/data/ -g x_ERA-Interim.rds.gz && \
+    zenodo_get -r 17331040 -o /workdir/data/pr -g y.rds.gz
 
 # Set the RETICULATE_PYTHON environment variable for the user
 ENV RETICULATE_PYTHON=$CONDA_DIR/bin/python
