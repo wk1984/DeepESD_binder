@@ -44,8 +44,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # 4. R Packages Installation
 # Switch back to the default non-root user 'rstudio'
 # ==============================================================================
-USER rstudio
-
 # Set the RETICULATE_PYTHON environment variable.
 # This is crucial for the R 'reticulate' package to find the correct Python installation.
 ENV RETICULATE_PYTHON=$VENV_PATH/bin/python
@@ -65,5 +63,6 @@ RUN R -e "library(tensorflow); cat('\\nPython TensorFlow module version:', tf$`_
 # ==============================================================================
 # 6. Set Default Command (Optional)
 # ==============================================================================
+USER rstudio
 WORKDIR /home/rstudio
 CMD ["/bin/bash"]
