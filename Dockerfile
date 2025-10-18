@@ -73,9 +73,9 @@ RUN R -e "IRkernel::installspec(user = FALSE)"
 USER rstudio
 WORKDIR /home/rstudio
 
-RUN mkdir -p /workdir/data/pr && \
-    zenodo_get -r 17331040 -o /workdir/data/ -g x_ERA-Interim.rds.gz && \
-    zenodo_get -r 17331040 -o /workdir/data/pr -g y.rds.gz
+RUN mkdir -p /home/rstudio/data/pr && \
+    zenodo_get -r 17331040 -o /home/rstudio/data/ -g x_ERA-Interim.rds.gz && \
+    zenodo_get -r 17331040 -o /home/rstudio/data/pr -g y.rds.gz
 
 # Set the RETICULATE_PYTHON environment variable for the user
 ENV RETICULATE_PYTHON=$CONDA_DIR/bin/python
