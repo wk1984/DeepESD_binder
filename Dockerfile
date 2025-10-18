@@ -47,13 +47,15 @@ RUN apt-get update && \
     
 RUN chown -R rstudio:rstudio $CONDA_DIR
 
+RUN conda install -c conda-forge tensorflow keras
+
 RUN conda install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java
     
 RUN pip install jupyterlab
     
 # --- THIS IS THE KEY CHANGE ---
 # Install R packages system-wide as root
-RUN R -e "install.packages(c('reticulate', 'tensorflow', 'keras', 'IRkernel'), repos = 'https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('reticulate', 'IRkernel'), repos = 'https://cloud.r-project.org/')"
 
 # Register the R kernel with Jupyter system-wide
 RUN R -e "IRkernel::installspec(user = FALSE)"
