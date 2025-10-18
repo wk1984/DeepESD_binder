@@ -5,6 +5,8 @@ This repository contains the material and guidelines to reproduce the results pr
 
 **Dockerfile** contains the versions of the python and R libraries employed to reproduce the results of the manuscript. A conda environment with the appropriate versions.
 
+**binder** https://mybinder.org/v2/gh/wk1984/DeepESD_binder/HEAD
+
 
 **DOWNLOAD DEMO DATASETS**
 > zenodo_get -r 17331040 -o ./data -g x_ERA-Interim.rds.gz
