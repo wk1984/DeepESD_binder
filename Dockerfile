@@ -4,7 +4,8 @@
 
 # 1. Base Image
 # Using a specific version of rocker/r-ver for reproducibility.
-FROM rocker/r-ver:4.1.3-cuda11.1
+FROM rocker/r-ver:4.1.3
+#FROM rocker/r-ver:4.1.3-cuda11.1
 
 # ==============================================================================
 # 2. System Dependencies
