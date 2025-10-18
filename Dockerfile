@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
     tensorflow==2.13.0 \
     jupyterlab \
-    "typing-extensions>=4.7.0"
+    "typing-extensions>=4.5.0"
 
 # --- THIS IS THE KEY CHANGE ---
 # Install R packages system-wide as root
