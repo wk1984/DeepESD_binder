@@ -48,7 +48,7 @@ RUN apt-get update && \
     
 RUN chown -R rstudio:rstudio $CONDA_DIR
 
-RUN conda install -c conda-forge tensorflow==2.16.* keras==2.16.*
+RUN conda install -c conda-forge tensorflow==2.15.* keras==2.15.*
 
 RUN conda install -c conda-forge -c r -c santandermetgroup r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java
     
