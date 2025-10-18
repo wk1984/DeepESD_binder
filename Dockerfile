@@ -27,7 +27,7 @@ ENV PATH="$VENV_PATH/bin:$PATH"
 # Install Python packages
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
-    tensorflow==2.13.0 \
+    tensorflow==2.16.* \
     jupyterlab
     
 # --- THIS IS THE KEY CHANGE ---
