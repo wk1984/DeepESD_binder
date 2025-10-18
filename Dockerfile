@@ -25,6 +25,7 @@ RUN python3 -m venv $VENV_PATH
 ENV PATH="$VENV_PATH/bin:$PATH"
 
 # Grant the default rstudio user permissions
+RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
 RUN chown -R rstudio:rstudio $VENV_PATH
 
 # ===================================================================================
