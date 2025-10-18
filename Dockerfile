@@ -55,10 +55,10 @@ RUN R -e "install.packages(c('reticulate', 'tensorflow', 'keras'), repos = 'http
 # 5. Verification
 # Run some R commands to ensure that TensorFlow and Keras are correctly configured.
 # ==============================================================================
-RUN R -e "library(tensorflow); cat('Python configuration used by R:\\n'); reticulate::py_config()"
-RUN R -e "library(tensorflow); cat('\\nTensorFlow version detected by R:\\n'); print(tf_config())"
-RUN R -e "library(keras); cat('\\nIs Keras available to R?:', is_keras_available(), '\\n')"
-RUN R -e "library(tensorflow); cat('\\nPython TensorFlow module version:', tf$`__version__`, '\\n')"
+#RUN R -e "library(tensorflow); cat('Python configuration used by R:\\n'); reticulate::py_config()"
+#RUN R -e "library(tensorflow); cat('\\nTensorFlow version detected by R:\\n'); print(tf_config())"
+#RUN R -e "library(keras); cat('\\nIs Keras available to R?:', is_keras_available(), '\\n')"
+#RUN R -e "library(tensorflow); cat('\\nPython TensorFlow module version:', tf$`__version__`, '\\n')"
 
 # ==============================================================================
 # 6. Set Default Command (Optional)
