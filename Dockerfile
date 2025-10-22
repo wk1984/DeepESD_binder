@@ -13,9 +13,8 @@ USER root
 
 # Grant the rstudio user permissions for the venv AFTER all installations
 RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
-
-RUN R && \
-    install.packages(c("tensorflow", "keras", "gridExtra", "ncdf4"))
+    
+RUN R -e "install.packages(c('tensorflow', 'keras', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
 
 # ===================================================================================
 # 5. Final User Configuration and Runtime Command
