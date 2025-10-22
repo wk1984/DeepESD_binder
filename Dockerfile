@@ -8,6 +8,10 @@
 
 FROM tensorflow/tensorflow:2.6.1-gpu-jupyter
 
+RUN   apt-key del 7fa2af80
+ADD   https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb .
+RUN   dpkg -i cuda-keyring_1.0-1_all.deb
+
 # ===================================================================================
 # 2. System Dependencies & Installations (as root)
 # ===================================================================================
