@@ -15,13 +15,13 @@ USER root
 RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng-dev git libnetcdf-dev wget \
+    libpng-dev git libnetcdf-dev wget  \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
     
-#RUN R -e "install.packages(c('reticulate', 'tensorflow', 'keras', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-project.org')"
 
 # RUN R -e "library(tensorflow); install_tensorflow(version = "2.6")"
 
