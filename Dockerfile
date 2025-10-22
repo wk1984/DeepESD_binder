@@ -41,7 +41,7 @@ RUN echo "conda activate rpy-tf" >> ~/.bashrc
 ENV PATH /opt/conda/envs/rpy-tf/bin:$PATH
 
 # 安装Python包
-RUN /opt/conda/envs/rpy-tf/bin/pip install \
+RUN conda install -y -c conda-forge \
     tensorflow==2.10.0 \
     numpy \
     pandas \
