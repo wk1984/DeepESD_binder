@@ -28,14 +28,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Mambaforge-4.14.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
-    /opt/conda/bin/conda clean -tipsy && \
+#    /opt/conda/bin/conda clean -tipsy && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
 # 创建conda环境
 #RUN conda install mamba -c conda-forge -y
-
 #RUN mamba create -n rpy-tf python=3.9 r-base=4.2 -c conda-forge -y
 
 # 初始化conda环境
