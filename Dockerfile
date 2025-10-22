@@ -13,8 +13,6 @@ FROM tensorflow/tensorflow:2.6.1-gpu-jupyter
 # ===================================================================================
 USER root
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
-
 # Grant the rstudio user permissions for the venv AFTER all installations
 RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
 
