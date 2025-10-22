@@ -34,14 +34,14 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linu
     echo "conda activate base" >> ~/.bashrc
 
 # 创建conda环境
-RUN conda create -n rpy-tf python=3.9 r-base=4.2 -c conda-forge -y
+RUN conda create -n rpy-tf python=3.9 r-base=4.2 mamba -c conda-forge -y
 
 # 初始化conda环境
 RUN echo "conda activate rpy-tf" >> ~/.bashrc
 ENV PATH /opt/conda/envs/rpy-tf/bin:$PATH
 
 # 安装Python包
-RUN conda install -y -c conda-forge \
+RUN mamba install -y -c conda-forge \
     tensorflow==2.10.0 \
     numpy \
     pandas \
