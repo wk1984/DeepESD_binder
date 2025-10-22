@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装Miniconda
-RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Mambaforge-4.14.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.12.0-0/Mambaforge-4.12.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
 #    /opt/conda/bin/conda clean -tipsy && \
@@ -42,7 +42,7 @@ RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14
 #ENV PATH /opt/conda/envs/rpy-tf/bin:$PATH
 
 # 安装Python包
-RUN mamba install -y -c conda-forge \
+RUN mamba install -y -c conda-forge -c r \
     tensorflow==2.10.0 \
     numpy \
     pandas \
@@ -54,7 +54,11 @@ RUN mamba install -y -c conda-forge \
     r-reticulate \
     r-tensorflow \
     r-keras \
-    r-IRkernel
+    r-IRkernel \
+	r-loader r-loader.2nc \
+	r-transformer r-downscaler r-visualizer r-downscaler.keras \
+	r-climate4r.value r-climate4r.udg r-value r-loader.java
+	
 
 # 配置R的tensorflow包使用正确的Python环境
 RUN R -e " \
