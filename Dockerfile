@@ -21,13 +21,14 @@ USER root
 RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng-dev git libnetcdf-dev wget r-base  \
+    libpng-dev git libnetcdf-dev wget libxml2-dev \
+    r-base r-cran-devtools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python -V
 
-RUN R -V
+RUN R -e "library(devtools)"
   
 # RUN conda update -n base conda && \
 #     conda install -c conda-forge -c r r-reticulate r-tensorflow r-keras -y
