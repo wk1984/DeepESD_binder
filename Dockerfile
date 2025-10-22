@@ -6,7 +6,7 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHON_VERSION=3.9
-ENV R_VERSION=3.6.3
+ENV R_VERSION=4.5.1
 
 # 设置工作目录
 WORKDIR /workspace
@@ -69,7 +69,7 @@ RUN R -e "install.packages('reticulate', repos='https://cloud.r-project.org/')" 
 RUN R -e "reticulate::use_python('/usr/bin/python3.9', required=TRUE)"
 
 # 在R中安装和配置tensorflow
-RUN R -e "tensorflow::install_tensorflow(version = '2.10.0')"
+# RUN R -e "tensorflow::install_tensorflow(version = '2.10.0')"
 
 # 创建Jupyter内核，同时支持R和Python
 RUN pip3 install --no-cache-dir irkernel \
