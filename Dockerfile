@@ -23,7 +23,7 @@ RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http:
     
 RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-project.org')"
 
-RUN R -e "library(reticulatev); reticulatev:virtualenv_create('r-reticulate')"
+RUN R -e "library(reticulate); reticulate:virtualenv_create('r-reticulate')"
 
 #RUN R -e "library(tensorflow); install_tensorflow(envname = 'r-reticulate', version = '2.6')"
 
