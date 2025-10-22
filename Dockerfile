@@ -1,5 +1,5 @@
 # 使用支持CUDA的基础镜像
-FROM nvidia/cuda:12.8.0-cudnn-runtime-ubuntu20.04
+FROM nvidia/cuda:12.0.0-cudnn8-runtime-ubuntu20.04
 
 # 设置环境变量
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
@@ -45,8 +45,8 @@ RUN mamba install -y -c conda-forge -c r \
     jupyter \
     jupyterlab \
     r-reticulate r-devtools \
-    r-tensorflow==2.18.0 \
-    r-keras==2.18.0 \
+    r-tensorflow==2.16.0 \
+    r-keras==2.16.0 \
     r-IRkernel \
 	r-loader r-loader.2nc \
 	r-transformer r-downscaler r-visualizer r-downscaler.keras \
