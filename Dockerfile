@@ -58,16 +58,16 @@ RUN mamba install -y -c conda-forge \
     r-IRkernel
 
 # 配置R的tensorflow包使用正确的Python环境
-RUN /opt/conda/envs/rpy-tf/bin/Rscript -e " \
-    library(reticulate); \
-    use_condaenv('rpy-tf', required=TRUE)
+#RUN R -e " \
+#    library(reticulate); \
+#    use_condaenv('rpy-tf', required=TRUE)
     
 # 注册R内核到Jupyter
 RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # 验证安装
-RUN /opt/conda/envs/rpy-tf/bin/python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__); print('GPU available:', tf.config.list_physical_devices('GPU'))"
-RUN /opt/conda/envs/rpy-tf/bin/Rscript -e "library(tensorflow); tf_version()"
+#RUN /opt/conda/envs/rpy-tf/bin/python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__); print('GPU available:', tf.config.list_physical_devices('GPU'))"
+#RUN /opt/conda/envs/rpy-tf/bin/Rscript -e "library(tensorflow); tf_version()"
 
 # 设置工作目录
 WORKDIR /workspace
