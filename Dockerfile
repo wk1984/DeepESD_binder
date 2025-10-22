@@ -1,76 +1,96 @@
-# ===================================================================================
-# Dockerfile to install R, Python, TensorFlow, Keras, and JupyterLab with an R Kernel
-# ===================================================================================
+# 使用支持CUDA的基础镜像
+FROM nvidia/cuda:11.8-runtime-ubuntu20.04
 
-# 1. Base Image
-#FROM rocker/r-ver:4.5
-#FROM rocker/r-ver:4.1.3-cuda11.1
+# 设置环境变量
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHON_VERSION=3.9
+ENV R_VERSION=3.6.3
 
-FROM tensorflow/tensorflow:2.10.1-gpu-jupyter
+# 设置工作目录
+WORKDIR /workspace
 
-# sudo apt-key del 7fa2af80
-# sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-# sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub
-
-# ===================================================================================
-# 2. System Dependencies & Installations (as root)
-# ===================================================================================
-USER root
-
-# Grant the rstudio user permissions for the venv AFTER all installations
-RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
-
+# 安装系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng-dev git libnetcdf-dev wget libxml2-dev r-base-dev \
-    r-base r-cran-devtools \
-    && apt-get clean \
+    wget \
+    curl \
+    git \
+    vim \
+    build-essential \
+    software-properties-common \
+    ca-certificates \
+    gnupg2 \
     && rm -rf /var/lib/apt/lists/*
-    
 
+# 安装Python 3.9
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.9 \
+    python3.9-dev \
+    python3.9-distutils \
+    python3-pip \
+    && ln -sf /usr/bin/python3.9 /usr/bin/python3 \
+    && ln -sf /usr/bin/python3 /usr/bin/python \
+    && rm -rf /var/lib/apt/lists/*
 
-# USER rstudio
+# 更新pip并安装基础Python包
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.9
+RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel
 
-RUN python -V
+# 安装R 3.6
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    dirmngr \
+    gnupg \
+    && wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | apt-key add - \
+    && echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+    r-base=${R_VERSION}* \
+    r-base-dev=${R_VERSION}* \
+    && rm -rf /var/lib/apt/lists/*
 
-# RUN R -e "library(devtools)"
+# 安装TensorFlow 2.10 with CUDA支持
+RUN pip3 install --no-cache-dir \
+    tensorflow==2.10.0 \
+    numpy==1.23.5 \
+    pandas \
+    scikit-learn \
+    matplotlib \
+    jupyter
 
-RUN R -e "install.packages(c('Rcpp', 'reticulate', 'gridExtra' ,'ncdf4', 'tensorflow', 'keras', 'IRkernel'), repos = 'http://cran.us.r-project.org')" && \
-    R -e "library(reticulate); use_python('/usr/local/bin/python'); py_config()" \
-    R -e "library(IRkernel); IRkernel::installspec() "
+# 安装R包（包括tensorflow和reticulate）
+RUN R -e "install.packages('reticulate', repos='https://cloud.r-project.org/')" \
+    && R -e "install.packages('tensorflow', repos='https://cloud.r-project.org/')" \
+    && R -e "install.packages('devtools', repos='https://cloud.r-project.org/')" \
+    && R -e "install.packages('ggplot2', repos='https://cloud.r-project.org/')" \
+    && R -e "install.packages('dplyr', repos='https://cloud.r-project.org/')"
 
-  
-# RUN conda update -n base conda && \
-#     conda install -c conda-forge -c r r-reticulate r-tensorflow r-keras -y
-# 
-# RUN conda install -c conda-forge -c r r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java -y
+# 配置reticulate使用正确的Python版本
+RUN R -e "reticulate::use_python('/usr/bin/python3.9', required=TRUE)"
 
-# RUN R -e "library(reticulate)"
+# 在R中安装和配置tensorflow
+RUN R -e "tensorflow::install_tensorflow(version = '2.10.0')"
 
-# RUN which R
+# 创建Jupyter内核，同时支持R和Python
+RUN pip3 install --no-cache-dir irkernel \
+    && R -e "IRkernel::installspec(user = FALSE)"
 
-# RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org', lib = '~/R/x86_64-pc-linux-gnu-library/3.6')"
-    
-# RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-project.org')"
+# 设置环境变量让R的tensorflow包能找到Python的tensorflow
+ENV RETICULATE_PYTHON=/usr/bin/python3.9
+ENV TENSORFLOW_PYTHON=/usr/bin/python3.9
 
-# RUN R -e "library(reticulate); reticulate::virtualenv_create('r-reticulate')"
+# 创建测试脚本
+RUN echo 'library(tensorflow)\nlibrary(reticulate)\n\n# 测试TensorFlow是否正常工作\ncat("Python version:", py_config()$version, "\\n")\ncat("TensorFlow version in Python:", tf$`__version__`, "\\n")\n\n# 测试R的tensorflow包\ncat("R tensorflow version:", as.character(packageVersion("tensorflow")), "\\n")\n\n# 创建一个简单的tensorflow计算\ntf$constant("Hello from TensorFlow in R!")' > /workspace/test_tensorflow.R
 
-# RUN R -e "library(reticulate); install_miniconda()" 
+RUN echo 'import tensorflow as tf\nimport sys\n\nprint("Python version:", sys.version)\nprint("TensorFlow version:", tf.__version__)\nprint("GPU available:", tf.test.is_gpu_available())\n\n# 测试GPU\nif tf.test.is_gpu_available():\n    print("GPU devices:")\n    for device in tf.config.experimental.list_physical_devices("GPU"):\n        print(f"  - {device}")\nelse:\n    print("No GPU detected")' > /workspace/test_tensorflow.py
 
-#; conda_create('r-reticulate')"
-
-#RUN R -e "library(tensorflow); install_tensorflow(envname = 'r-reticulate', version = '2.6')"
-
-# ===================================================================================
-# 5. Final User Configuration and Runtime Command
-# ===================================================================================
-# Now, switch to the non-root user for the runtime environment
-USER rstudio
-WORKDIR /home/rstudio
-
-RUN echo "options(reticulate.python_binary='/usr/local/bin/python'); use_python('/usr/local/bin/python'); " > ~/.Rprofile
-
-# Expose the port (can be done as root, but placement here is fine)
+# 暴露Jupyter端口
 EXPOSE 8888
 
-# Set the default command to be run as the rstudio user
-#CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--NotebookApp.token=''"]
+# 创建启动脚本
+RUN echo '#!/bin/bash\n\n# 测试环境\necho "=== Testing Python TensorFlow ==="\npython3 /workspace/test_tensorflow.py\n\necho -e "\\n=== Testing R TensorFlow ==="\nRscript /workspace/test_tensorflow.R\n\necho -e "\\n=== Starting Jupyter Lab ==="\njupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password=""' > /workspace/start.sh
+
+RUN chmod +x /workspace/start.sh
+
+# 设置默认命令
+CMD ["/workspace/start.sh"]
