@@ -21,14 +21,19 @@ USER root
 RUN useradd -m -s /bin/bash rstudio && echo "rstudio:111" | chpasswd
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng-dev git libnetcdf-dev wget libxml2-dev \
+    libpng-dev git libnetcdf-dev wget libxml2-dev r-base-dev \
     r-base r-cran-devtools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+    
+    
+USER rstudio
 
 RUN python -V
 
-RUN R -e "library(devtools)"
+# RUN R -e "library(devtools)"
+
+RUN R -e "install.packages(c('Rcpp', 'reticulate', 'gridExtra' ,'ncdf4', 'tensorflow', 'keras'), repos = 'http://cran.us.r-project.org', lib = '/home/rstudio/R/x86_64-pc-linux-gnu-library/3.6')"
   
 # RUN conda update -n base conda && \
 #     conda install -c conda-forge -c r r-reticulate r-tensorflow r-keras -y
@@ -39,7 +44,7 @@ RUN R -e "library(devtools)"
 
 # RUN which R
 
-# RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
+# RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org', lib = '~/R/x86_64-pc-linux-gnu-library/3.6')"
     
 # RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-project.org')"
 
