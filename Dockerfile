@@ -20,6 +20,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev git libnetcdf-dev wget  \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+    
+RUN conda install -c conda-forge -c r r-reticulate r-tensorflow r-keras -y
+
+RUN conda install -c conda-forge -c r r-loader r-loader.2nc r-transformer r-downscaler r-visualizer r-downscaler.keras r-climate4r.value r-climate4r.udg r-value r-loader.java -y
+
+# RUN R -e "library(reticulate)"
+
+RUN which R
 
 #RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
     
