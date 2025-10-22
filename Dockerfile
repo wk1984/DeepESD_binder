@@ -49,17 +49,19 @@ RUN /opt/conda/envs/rpy-tf/bin/pip install \
     matplotlib \
     seaborn \
     jupyter \
-    jupyterlab
-
-# 安装R包
-RUN /opt/conda/envs/rpy-tf/bin/Rscript -e "install.packages(c('reticulate', 'tensorflow'), repos='https://cloud.r-project.org/')"
+    jupyterlab \
+    r-reticulate \
+    r-tensorflow \
+    r-keras \
+    r-IRkernel
 
 # 配置R的tensorflow包使用正确的Python环境
 RUN /opt/conda/envs/rpy-tf/bin/Rscript -e " \
     library(reticulate); \
-    use_condaenv('rpy-tf', required=TRUE); \
-    library(tensorflow); \
-    install_tensorflow(version='2.10.0')"
+    use_condaenv('rpy-tf', required=TRUE)
+    
+# 注册R内核到Jupyter
+RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # 验证安装
 RUN /opt/conda/envs/rpy-tf/bin/python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__); print('GPU available:', tf.config.list_physical_devices('GPU'))"
