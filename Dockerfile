@@ -3,8 +3,10 @@
 # ===================================================================================
 
 # 1. Base Image
-FROM rocker/r-ver:4.5
+#FROM rocker/r-ver:4.5
 #FROM rocker/r-ver:4.1.3-cuda11.1
+
+FROM jupyter/tensorflow-notebook:x86_64-ubuntu-22.04
 
 # ===================================================================================
 # 2. System Dependencies & Installations (as root)
@@ -19,13 +21,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
+#RUN R -e "install.packages(c('reticulate', 'gridExtra' ,'ncdf4'), repos = 'http://cran.us.r-project.org')"
     
-RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-project.org')"
+#RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-project.org')"
 
 # RUN R -e "library(reticulate); reticulate::virtualenv_create('r-reticulate')"
 
-RUN R -e "library(reticulate); install_miniconda()" 
+# RUN R -e "library(reticulate); install_miniconda()" 
 
 #; conda_create('r-reticulate')"
 
