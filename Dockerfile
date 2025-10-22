@@ -1,5 +1,5 @@
 # 使用支持CUDA的基础镜像
-FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:12.8.0-cudnn8-runtime-ubuntu20.04
 
 # 设置环境变量
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装Miniconda
-RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.12.0-0/Mambaforge-4.12.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Mambaforge-4.14.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
 #    /opt/conda/bin/conda clean -tipsy && \
@@ -33,17 +33,10 @@ RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.12
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-# 创建conda环境
-#RUN conda install mamba -c conda-forge -y
-#RUN mamba create -n rpy-tf python=3.9 r-base=4.2 -c conda-forge -y
-
-# 初始化conda环境
-#RUN echo "conda activate rpy-tf" >> ~/.bashrc
-#ENV PATH /opt/conda/envs/rpy-tf/bin:$PATH
-
 # 安装Python包
 RUN mamba install -y -c conda-forge -c r \
-    tensorflow==2.10.0 \
+    tensorflow==2.18.0 \
+    r-base=4.5 \
     numpy \
     pandas \
     scikit-learn \
@@ -52,8 +45,8 @@ RUN mamba install -y -c conda-forge -c r \
     jupyter \
     jupyterlab \
     r-reticulate r-devtools \
-    r-tensorflow \
-    r-keras \
+    r-tensorflow==2.18.0 \
+    r-keras==2.18.0 \
     r-IRkernel \
 	r-loader r-loader.2nc \
 	r-transformer r-downscaler r-visualizer r-downscaler.keras \
@@ -72,7 +65,9 @@ RUN R -e " \
 # RUN R -e "IRkernel::installspec()"
 
 # 验证安装
-RUN python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__); print('GPU available:', tf.config.list_physical_devices('GPU'))"
+RUN python -c "import tensorflow as tf; \ 
+               print('TensorFlow version:', tf.__version__); \  
+               print('Built with CUDA:', tf.test.is_built_with_cuda()"
 # RUN /opt/conda/envs/rpy-tf/bin/Rscript -e "library(tensorflow); tf_version()"
 
 # 设置工作目录
@@ -90,13 +85,6 @@ RUN chmod -R u+rwx /workdir
 
 USER user
 WORKDIR /workdir
-
-# 创建Jupyter配置
-#RUN /opt/conda/envs/rpy-tf/bin/jupyter notebook --generate-config && \
-#    echo "c.NotebookApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_notebook_config.py && \
-#    echo "c.NotebookApp.port = 8888" >> /root/.jupyter/jupyter_notebook_config.py && \
-#    echo "c.NotebookApp.open_browser = False" >> /root/.jupyter/jupyter_notebook_config.py && \
-#    echo "c.NotebookApp.allow_root = True" >> /root/.jupyter/jupyter_notebook_config.py
 
 # 暴露端口
 EXPOSE 8888
