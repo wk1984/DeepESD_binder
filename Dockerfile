@@ -6,7 +6,7 @@
 #FROM rocker/r-ver:4.5
 #FROM rocker/r-ver:4.1.3-cuda11.1
 
-FROM jupyter/tensorflow-notebook:x86_64-ubuntu-22.04
+FROM tensorflow/tensorflow:2.6.1-gpu-jupyter
 
 # ===================================================================================
 # 2. System Dependencies & Installations (as root)
