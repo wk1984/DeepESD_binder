@@ -71,7 +71,20 @@ RUN python -c "import tensorflow as tf; print('TensorFlow version:', tf.__versio
 # RUN /opt/conda/envs/rpy-tf/bin/Rscript -e "library(tensorflow); tf_version()"
 
 # 设置工作目录
-WORKDIR /workspace
+RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
+RUN usermod -aG sudo user
+
+# 必须要修改权限，否则JUPYTER停止后不能够重新启动
+USER root
+RUN chown -R user:user $HOME/
+RUN chmod -R u+rwx $HOME/
+
+RUN mkdir -p /workdir
+RUN chown -R user:user /workdir
+RUN chmod -R u+rwx /workdir
+
+USER user
+WORKDIR /workdir
 
 # 创建Jupyter配置
 #RUN /opt/conda/envs/rpy-tf/bin/jupyter notebook --generate-config && \
