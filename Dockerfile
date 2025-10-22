@@ -25,7 +25,9 @@ RUN R -e "install.packages(c('tensorflow', 'keras'), repos = 'http://cran.us.r-p
 
 # RUN R -e "library(reticulate); reticulate::virtualenv_create('r-reticulate')"
 
-RUN R -e "library(reticulate); install_miniconda(); conda_create('r-reticulate')"
+RUN R -e "library(reticulate); install_miniconda()" 
+
+#; conda_create('r-reticulate')"
 
 #RUN R -e "library(tensorflow); install_tensorflow(envname = 'r-reticulate', version = '2.6')"
 
