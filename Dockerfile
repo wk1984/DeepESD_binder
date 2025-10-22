@@ -58,7 +58,7 @@ RUN mamba install -y -c conda-forge -c r \
 	r-loader r-loader.2nc \
 	r-transformer r-downscaler r-visualizer r-downscaler.keras \
 	r-climate4r.value r-climate4r.udg r-value r-loader.java \
-	r-r-climate4r.datasets r-climate4r r-climate4r.hub
+	r-climate4r.datasets r-climate4r r-climate4r.hub
 	
 
 # 配置R的tensorflow包使用正确的Python环境
