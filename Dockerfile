@@ -34,7 +34,8 @@ RUN python -V
 # RUN R -e "library(devtools)"
 
 RUN R -e "install.packages(c('Rcpp', 'reticulate', 'gridExtra' ,'ncdf4', 'tensorflow', 'keras', 'IRkernel'), repos = 'http://cran.us.r-project.org')" && \
-    R -e "library(IRkernel); IRkernel::installspec()"
+    R -e "library(IRkernel); IRkernel::installspec() " && \
+    R -e "library(reticulate); use_python('/usr/local/bin/python'); py_config()"
 
   
 # RUN conda update -n base conda && \
