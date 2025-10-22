@@ -1,5 +1,5 @@
 # 使用支持CUDA的基础镜像
-FROM nvidia/cuda:12.8.0-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:12.8.0-cudnn-runtime-ubuntu20.04
 
 # 设置环境变量
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
