@@ -63,6 +63,7 @@ RUN R -e "install.packages('reticulate', repos='https://cloud.r-project.org/')" 
     && R -e "install.packages('tensorflow', repos='https://cloud.r-project.org/')" \
     && R -e "install.packages('devtools', repos='https://cloud.r-project.org/')" \
     && R -e "install.packages('ggplot2', repos='https://cloud.r-project.org/')" \
+    && R -e "install.packages('irkernel', repos='https://cloud.r-project.org/')" \
     && R -e "install.packages('dplyr', repos='https://cloud.r-project.org/')"
 
 # 配置reticulate使用正确的Python版本
@@ -72,8 +73,7 @@ RUN R -e "reticulate::use_python('/usr/bin/python3.9', required=TRUE)"
 # RUN R -e "tensorflow::install_tensorflow(version = '2.10.0')"
 
 # 创建Jupyter内核，同时支持R和Python
-RUN pip3 install --no-cache-dir irkernel \
-    && R -e "IRkernel::installspec(user = FALSE)"
+RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # 设置环境变量让R的tensorflow包能找到Python的tensorflow
 ENV RETICULATE_PYTHON=/usr/bin/python3.9
