@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
     
-RUN echo "options(reticulate.python_binary='/usr/local/bin/python'); library(reticulate); use_python('/usr/local/bin/python'); " > ~/.Rprofile
+
 
 # USER rstudio
 
@@ -35,7 +35,7 @@ RUN python -V
 # RUN R -e "library(devtools)"
 
 RUN R -e "install.packages(c('Rcpp', 'reticulate', 'gridExtra' ,'ncdf4', 'tensorflow', 'keras', 'IRkernel'), repos = 'http://cran.us.r-project.org')" && \
-#    R -e "library(reticulate); use_python('/usr/local/bin/python'); py_config()" \
+    R -e "library(reticulate); use_python('/usr/local/bin/python'); py_config()" \
     R -e "library(IRkernel); IRkernel::installspec() "
 
   
@@ -66,6 +66,8 @@ RUN R -e "install.packages(c('Rcpp', 'reticulate', 'gridExtra' ,'ncdf4', 'tensor
 # Now, switch to the non-root user for the runtime environment
 USER rstudio
 WORKDIR /home/rstudio
+
+RUN echo "options(reticulate.python_binary='/usr/local/bin/python'); use_python('/usr/local/bin/python'); " > ~/.Rprofile
 
 # Expose the port (can be done as root, but placement here is fine)
 EXPOSE 8888
