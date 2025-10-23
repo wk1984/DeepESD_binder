@@ -35,7 +35,7 @@ RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14
 
 # 安装Python包
 RUN mamba install -y -c conda-forge -c r \
-    tensorflow==2.18.0 \
+    tensorflow==2.15.0 \
     r-base=4.5 \
     numpy \
     pandas \
@@ -45,8 +45,8 @@ RUN mamba install -y -c conda-forge -c r \
     jupyter \
     jupyterlab \
     r-reticulate r-devtools \
-    r-tensorflow==2.16.0 \
-    r-keras==2.16.0 \
+    r-tensorflow==2.15.0 \
+    r-keras==2.15.0 \
     r-IRkernel \
 	r-loader r-loader.2nc \
 	r-transformer r-downscaler r-visualizer r-downscaler.keras \
