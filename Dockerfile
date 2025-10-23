@@ -1,5 +1,5 @@
 # 使用支持CUDA的基础镜像
-FROM nvidia/cuda:12.0.0-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:12.0.0-cudnn8-devel-ubuntu20.04
 
 # 设置环境变量
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装Miniconda
-RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.12.0-0/Mambaforge-4.12.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Mambaforge-4.14.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
 #    /opt/conda/bin/conda clean -tipsy && \
@@ -35,7 +35,7 @@ RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.12
 
 # 安装Python包
 RUN mamba install -y -c conda-forge -c r \
-    tensorflow==2.15.0 \
+    tensorflow==2.15 \
     r-base=4.5 \
     numpy \
     pandas \
@@ -45,8 +45,8 @@ RUN mamba install -y -c conda-forge -c r \
     jupyter \
     jupyterlab \
     r-reticulate r-devtools \
-    r-tensorflow==2.15.0 \
-    r-keras==2.15.0 \
+    r-tensorflow==2.15 \
+    r-keras==2.15 \
     r-IRkernel \
 	r-loader r-loader.2nc \
 	r-transformer r-downscaler r-visualizer r-downscaler.keras \
