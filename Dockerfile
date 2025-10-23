@@ -34,8 +34,8 @@ RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/4.14
     echo "conda activate base" >> ~/.bashrc
 
 # 安装Python包
-RUN mamba install -y -c conda-forge -c r \
-    cudatoolkit \
+RUN mamba install -y -c conda-forge -c r -c nvidia \
+    cuda==12.0 \
     tensorflow==2.15 \
     r-base=4.5 \
     numpy \
